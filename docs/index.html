@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📍 Excel Address Geocoder</title>
-  <link rel="stylesheet" href="style.css"/>
+  <title>📍 Address Geocoder</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
@@ -12,7 +12,7 @@
 
     <label for="apiKey"><span class="emoji">🔑</span> Enter your Google Maps API Key:</label>
     <div class="api-wrapper">
-      <input type="password" id="apiKey" placeholder="Enter API Key" />
+      <input type="password" id="apiKey" placeholder="Enter API Key" autocomplete="off" />
       <span class="toggle-visibility" onclick="toggleAPIVisibility()">👁️</span>
     </div>
 
@@ -23,7 +23,7 @@
     <div id="previewContainer"></div>
 
     <div id="columnSelectContainer" style="display: none;">
-      <label for="columnSelect">📍 Select the column containing addresses:</label>
+      <label for="columnSelect">Select the column containing addresses:</label>
       <select id="columnSelect"></select>
     </div>
 
