@@ -1,28 +1,15 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 40px;
-  background-color: #f9f9f9;
-  color: #333;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-input, select, button {
-  font-size: 16px;
-  padding: 8px;
-  width: 300px;
+#output.success {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  border: 1px solid #badbcc;
 }
 
-button {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #45a049;
-}
-
-#output {
-  margin-top: 20px;
-  font-weight: bold;
+#output.error {
+  background-color: #f8d7da;
+  color: #842029;
+  border: 1px solid #f5c2c7;
 }
