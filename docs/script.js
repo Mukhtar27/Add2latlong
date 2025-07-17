@@ -1,62 +1,92 @@
 let workbookData = null;
-let selectedSheetName = null;
-let addressColumn = null;
 
 document.getElementById("fileUpload").addEventListener("change", handleFile, false);
 
+function toggleApiKey() {
+  const input = document.getElementById("apiKey");
+  input.type = input.type === "password" ? "text" : "password";
+}
+
 function handleFile(e) {
+  const file = e.target.files[0];
   const reader = new FileReader();
+
   reader.onload = function (e) {
     const data = new Uint8Array(e.target.result);
     const workbook = XLSX.read(data, { type: "array" });
-    selectedSheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[selectedSheetName];
-    workbookData = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    workbookData = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
     const columns = Object.keys(workbookData[0]);
     const select = document.getElementById("columnSelect");
     select.innerHTML = columns.map(col => `<option value="${col}">${col}</option>`).join('');
+
+    previewTable(workbookData.slice(0, 10));
   };
-  reader.readAsArrayBuffer(e.target.files[0]);
+
+  reader.readAsArrayBuffer(file);
+}
+
+function previewTable(data) {
+  const table = document.getElementById("previewTable");
+  if (!data || data.length === 0) {
+    table.innerHTML = "";
+    return;
+  }
+
+  const headers = Object.keys(data[0]);
+  const thead = `<thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>`;
+  const tbody = `<tbody>${data.map(row =>
+    `<tr>${headers.map(h => `<td>${row[h]}</td>`).join('')}</tr>`
+  ).join('')}</tbody>`;
+  table.innerHTML = thead + tbody;
 }
 
 async function geocodeAddress(address, apiKey) {
   const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
   try {
-    const response = await fetch(url);
-    const data = await response.json();
+    const res = await fetch(url);
+    const data = await res.json();
     if (data.status === "OK") {
-      const location = data.results[0].geometry.location;
-      return [location.lat, location.lng];
+      const loc = data.results[0].geometry.location;
+      return [loc.lat, loc.lng];
     }
-  } catch (error) {
-    console.error("Geocoding error:", error);
+  } catch (e) {
+    console.error("Geocode error:", e);
   }
   return [null, null];
 }
 
 async function processFile() {
   const apiKey = document.getElementById("apiKey").value.trim();
-  addressColumn = document.getElementById("columnSelect").value;
+  const addressColumn = document.getElementById("columnSelect").value;
+  const output = document.getElementById("output");
+  const downloadLink = document.getElementById("downloadLink");
 
   if (!apiKey || !workbookData || !addressColumn) {
-    alert("Make sure API Key, File, and Address Column are selected.");
+    output.textContent = "Please fill all fields!";
+    output.className = "alert alert-danger";
+    output.classList.remove("d-none");
     return;
   }
 
-  const outputDiv = document.getElementById("output");
-  outputDiv.innerHTML = "⏳ Processing... Please wait.";
+  output.className = "alert alert-warning";
+  output.classList.remove("d-none");
+  output.textContent = "⏳ Fetching coordinates...";
 
   for (let row of workbookData) {
     const address = row[addressColumn];
-    if (address) {
-      const [lat, lon] = await geocodeAddress(address, apiKey);
-      row["Latitude"] = lat;
-      row["Longitude"] = lon;
-    }
+    const [lat, lon] = await geocodeAddress(address, apiKey);
+    row["Latitude"] = lat;
+    row["Longitude"] = lon;
   }
 
-  outputDiv.innerHTML = "✅ Coordinates fetched!";
+  output.className = "alert success";
+  output.classList.add("success");
+  output.textContent = "✅ Coordinates added successfully!";
+
+  previewTable(workbookData.slice(0, 10));
+
   const ws = XLSX.utils.json_to_sheet(workbookData);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, "Geocoded");
@@ -64,8 +94,6 @@ async function processFile() {
   const wbout = XLSX.write(wb, { bookType: "xlsx", type: "array" });
   const blob = new Blob([wbout], { type: "application/octet-stream" });
 
-  const downloadLink = document.getElementById("downloadLink");
   downloadLink.href = URL.createObjectURL(blob);
-  downloadLink.style.display = "inline-block";
-  downloadLink.textContent = "⬇ Download Result Excel";
+  downloadLink.classList.remove("d-none");
 }
