@@ -1,129 +1,84 @@
 body {
   font-family: Arial, sans-serif;
-  background-color: #f8f9fc;
+  background: #f4f4f4;
   margin: 0;
-  padding: 0;
+  padding: 20px;
 }
 
 .container {
   max-width: 800px;
   margin: auto;
-  padding: 2rem;
-  background: #ffffff;
-  border-radius: 8px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 30px;
   box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-h1 {
+h1, h2 {
   text-align: center;
   color: #333;
 }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.api-wrapper {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
-
-.api-wrapper input[type="password"],
-.api-wrapper input[type="text"] {
-  flex-grow: 1;
-  padding: 0.6rem 2.5rem 0.6rem 0.6rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background-color: #f1f3f8;
-}
-
-.toggle-visibility {
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-}
-
-.drop-zone {
-  background-color: #f1f3f8;
-  padding: 1rem;
-  border: 2px dashed #c0c0c0;
+#drop-area {
+  border: 2px dashed #aaa;
+  padding: 40px;
   text-align: center;
-  border-radius: 6px;
-  margin-bottom: 1rem;
-}
-
-.drop-zone.hover {
-  background-color: #e6e9f0;
-  border-color: #a0a0a0;
-}
-
-.drop-zone .sub-text {
-  color: #888;
-  font-size: 0.9rem;
-}
-
-button {
-  background-color: #007BFF;
-  color: #fff;
-  border: none;
-  padding: 0.6rem 1.2rem;
-  margin-top: 1rem;
-  margin-right: 0.5rem;
-  border-radius: 5px;
+  color: #777;
+  border-radius: 10px;
+  margin-top: 20px;
   cursor: pointer;
 }
 
-button:hover {
-  background-color: #0056b3;
+#drop-area.highlight {
+  background-color: #f0faff;
+  border-color: #00aaff;
 }
 
-.reset-button {
-  background-color: #f44336;
+#drop-area input {
+  display: none;
 }
 
-.reset-button:hover {
-  background-color: #c62828;
-}
-
-#previewContainer {
-  margin-top: 1rem;
+#tablePreview {
+  margin-top: 20px;
   overflow-x: auto;
 }
 
 table {
-  width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  margin-top: 0.5rem;
+  width: 100%;
+  background: white;
 }
 
-table th, table td {
-  padding: 0.75rem;
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
-table th {
-  background-color: #f1f3f8;
-  font-weight: bold;
+th {
+  background-color: #007BFF;
+  color: white;
 }
 
-.preview-table th,
-.preview-table td {
+.password-toggle {
+  position: relative;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.password-toggle input {
+  width: 100%;
   padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #ddd;
-  font-size: 14px;
+  padding-right: 40px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
 }
 
-.preview-table th {
-  background-color: #f5f5f5;
-  font-weight: 600;
+.password-toggle span {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
 }
-
