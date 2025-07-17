@@ -1,116 +1,151 @@
 body {
-  font-family: Arial, sans-serif;
-  background: #f9f9f9;
-  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f6f8fa;
+  margin: 0;
   padding: 20px;
 }
 
 .container {
   max-width: 700px;
   margin: auto;
-  background: #fff;
-  padding: 25px 30px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  border-radius: 8px;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
 }
 
 h1 {
   text-align: center;
+  color: #333;
+  font-size: 24px;
+  margin-bottom: 30px;
 }
 
 label {
-  font-weight: bold;
   display: block;
-  margin-top: 20px;
+  margin: 20px 0 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+.emoji {
+  margin-right: 5px;
 }
 
 .api-wrapper {
-  display: flex;
-  align-items: center;
   position: relative;
 }
 
-.api-wrapper input {
+#apiKey {
   width: 100%;
-  padding: 10px;
-  padding-right: 40px;
+  padding: 10px 40px 10px 10px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.toggle-visibility {
-  position: absolute;
-  right: 10px;
-  cursor: pointer;
-  user-select: none;
-}
-
-button {
-  margin-top: 20px;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 4px;
-  background-color: #1976d2;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.reset-button {
-  background-color: #f44336;
-  margin-left: 10px;
-}
-
-button:hover {
-  opacity: 0.9;
-}
-
-#message {
-  margin-top: 15px;
-  font-weight: bold;
-  color: green;
-}
-
-#resultContainer {
-  margin-top: 20px;
-  overflow-x: auto;
-}
-
-a#downloadLink {
-  display: block;
-  margin-top: 20px;
-  text-align: center;
+  border-radius: 8px;
   font-size: 16px;
-}
-
-/* ✅ Remove browser's native password eye icon (Chrome, Edge, Safari) */
-input[type="password"]::-ms-reveal,
-input[type="password"]::-ms-clear,
-input[type="password"]::-webkit-credentials-auto-fill-button,
-input[type="password"]::-webkit-inner-spin-button,
-input[type="password"]::-webkit-clear-button {
-  display: none !important;
-  appearance: none !important;
-}
-
-/* ✅ Keep your custom eye toggle button aligned */
-.api-wrapper {
-  position: relative;
-}
-
-.api-wrapper input[type="password"],
-.api-wrapper input[type="text"] {
-  width: 100%;
-  padding-right: 30px; /* Space for eye icon */
+  background-color: #f2f4f8;
+  transition: border-color 0.3s ease;
 }
 
 .toggle-visibility {
   position: absolute;
   top: 50%;
-  right: 10px;
+  right: 12px;
   transform: translateY(-50%);
   cursor: pointer;
-  user-select: none;
-  font-size: 18px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
+.api-wrapper:hover .toggle-visibility {
+  opacity: 1;
+}
+
+.drop-zone {
+  border: 2px dashed #ccc;
+  background-color: #f2f4f8;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.drop-zone p {
+  margin: 0;
+  font-weight: 500;
+  color: #444;
+}
+
+.drop-zone .sub-text {
+  font-size: 12px;
+  color: #888;
+  margin-top: 6px;
+}
+
+#browseBtn {
+  margin-top: 12px;
+  padding: 8px 18px;
+  font-size: 14px;
+  background-color: #0066cc;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#browseBtn:hover {
+  background-color: #004a99;
+}
+
+button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-size: 15px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+#processBtn {
+  background-color: #28a745;
+  color: white;
+}
+
+#processBtn:hover {
+  background-color: #218838;
+}
+
+.reset-button {
+  background-color: #ffc107;
+  color: #212529;
+}
+
+.reset-button:hover {
+  background-color: #e0a800;
+}
+
+#message {
+  margin-top: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+#resultContainer {
+  margin-top: 20px;
+}
+
+#downloadLink {
+  display: inline-block;
+  margin-top: 15px;
+  font-size: 16px;
+  text-decoration: none;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 18px;
+  border-radius: 6px;
+}
+
+#downloadLink:hover {
+  background-color: #0056b3;
+}
