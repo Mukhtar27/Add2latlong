@@ -1,129 +1,84 @@
-let selectedFile;
-const fileInput = document.getElementById('fileInput');
-const dropZone = document.getElementById('dropZone');
-const browseBtn = document.getElementById('browseBtn');
-const columnSelect = document.getElementById('columnSelect');
-const columnSelectContainer = document.getElementById('columnSelectContainer');
-const previewContainer = document.getElementById('previewContainer');
-const message = document.getElementById('message');
-const downloadLink = document.getElementById('downloadLink');
+document.getElementById("browseBtn").addEventListener("click", () => {
+  document.getElementById("fileInput").click();
+});
 
-// Handle file browse
-browseBtn.addEventListener('click', () => fileInput.click());
+document.getElementById("dropZone").addEventListener("dragover", (e) => {
+  e.preventDefault();
+  e.currentTarget.classList.add("hover");
+});
 
-// Handle drag and drop
-dropZone.addEventListener('dragover', e => {
+document.getElementById("dropZone").addEventListener("dragleave", (e) => {
+  e.currentTarget.classList.remove("hover");
+});
+
+document.getElementById("dropZone").addEventListener("drop", (e) => {
   e.preventDefault();
-  dropZone.classList.add('dragover');
+  e.currentTarget.classList.remove("hover");
+  const file = e.dataTransfer.files[0];
+  handleFile(file);
 });
-dropZone.addEventListener('dragleave', () => {
-  dropZone.classList.remove('dragover');
+
+document.getElementById("fileInput").addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  handleFile(file);
 });
-dropZone.addEventListener('drop', e => {
-  e.preventDefault();
-  dropZone.classList.remove('dragover');
-  handleFile(e.dataTransfer.files[0]);
-});
-fileInput.addEventListener('change', () => {
-  if (fileInput.files.length > 0) {
-    handleFile(fileInput.files[0]);
+
+function toggleAPIVisibility() {
+  const apiKeyInput = document.getElementById("apiKey");
+  if (apiKeyInput.type === "password") {
+    apiKeyInput.type = "text";
+  } else {
+    apiKeyInput.type = "password";
   }
-});
+}
 
 function handleFile(file) {
-  if (!file.name.endsWith('.xlsx')) {
-    message.textContent = 'Please upload a valid .xlsx file.';
-    return;
-  }
-
-  selectedFile = file;
-  document.getElementById('fileInfo').textContent = `📁 Selected: ${file.name}`;
-
+  if (!file || !file.name.endsWith(".xlsx")) return;
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = function (e) {
     const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: 'array' });
+    const workbook = XLSX.read(data, { type: "array" });
     const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(sheet);
+    const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
     if (json.length === 0) return;
 
-    // Show preview
-    previewContainer.innerHTML = '<h4>📄 Preview:</h4><pre>' + JSON.stringify(json.slice(0, 5), null, 2) + '</pre>';
-
-    // Populate column selector
-    const keys = Object.keys(json[0]);
-    columnSelect.innerHTML = '';
-    keys.forEach(key => {
-      const option = document.createElement('option');
-      option.value = key;
-      option.textContent = key;
-      columnSelect.appendChild(option);
-    });
-    columnSelectContainer.style.display = 'block';
+    displayPreviewTable(json);
+    populateColumnSelect(Object.keys(json[0]));
   };
   reader.readAsArrayBuffer(file);
 }
 
-document.getElementById('processBtn').addEventListener('click', async () => {
-  if (!selectedFile) return alert('Please upload an Excel file.');
+function displayPreviewTable(data) {
+  const container = document.getElementById("previewContainer");
+  container.innerHTML = `<label>Preview of uploaded file:</label>`;
+  const table = document.createElement("table");
 
-  const apiKey = document.getElementById('apiKey').value.trim();
-  if (!apiKey) return alert('Please enter your API key.');
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+  const headers = Object.keys(data[0]);
 
-  const reader = new FileReader();
-  reader.onload = async (e) => {
-    const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: 'array' });
-    const sheet = workbook.Sheets[workbook.SheetNames[0]];
-    const json = XLSX.utils.sheet_to_json(sheet);
+  headerRow.innerHTML = `<th>#</th>` + headers.map(h => `<th>${h}</th>`).join("");
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
 
-    const column = columnSelect.value;
-    message.textContent = '⏳ Fetching coordinates...';
+  const tbody = document.createElement("tbody");
+  data.slice(0, 5).forEach((row, idx) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${idx}</td>` + headers.map(h => `<td>${row[h]}</td>`).join("");
+    tbody.appendChild(tr);
+  });
 
-    for (let row of json) {
-      const address = row[column];
-      const coords = await getCoordinates(address, apiKey);
-      row.Latitude = coords.lat;
-      row.Longitude = coords.lng;
-    }
-
-    message.textContent = '✅ Done!';
-
-    const newSheet = XLSX.utils.json_to_sheet(json);
-    const newWorkbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'Geocoded');
-    const wbout = XLSX.write(newWorkbook, { bookType: 'xlsx', type: 'array' });
-
-    const blob = new Blob([wbout], { type: 'application/octet-stream' });
-    downloadLink.href = URL.createObjectURL(blob);
-    downloadLink.download = 'geocoded_addresses.xlsx';
-    downloadLink.style.display = 'inline-block';
-    downloadLink.textContent = '⬇ Download Geocoded Excel';
-  };
-  reader.readAsArrayBuffer(selectedFile);
-});
-
-async function getCoordinates(address, apiKey) {
-  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-    if (data.status === 'OK') {
-      const loc = data.results[0].geometry.location;
-      return { lat: loc.lat, lng: loc.lng };
-    }
-  } catch (err) {
-    console.error('Error fetching geocode:', err);
-  }
-  return { lat: '', lng: '' };
+  table.appendChild(tbody);
+  container.appendChild(table);
+  document.getElementById("columnSelectContainer").style.display = "block";
 }
 
-document.getElementById('reset-btn').addEventListener('click', () => {
+function populateColumnSelect(columns) {
+  const select = document.getElementById("columnSelect");
+  select.innerHTML = columns.map(col => `<option value="${col}">${col}</option>`).join("");
+}
+
+document.getElementById("reset-btn").addEventListener("click", () => {
   location.reload();
 });
-
-function toggleAPIVisibility() {
-  const input = document.getElementById('apiKey');
-  input.type = input.type === 'password' ? 'text' : 'password';
-}
