@@ -9,25 +9,27 @@
 </head>
 <body>
   <div class="container">
-    <h1>Excel Address Geocoder</h1>
+    <h1>📍 Address Geocoder</h1>
 
-    <label for="apiKey">Google Maps API Key</label>
-    <div class="password-toggle">
-      <input type="password" id="apiKey" placeholder="Enter API Key">
-      <span id="togglePassword">👁️</span>
+    <div class="input-group">
+      <label for="apiKey">Google Maps API Key</label>
+      <div class="password-box">
+        <input type="password" id="apiKey" placeholder="Enter API Key">
+        <span id="togglePassword">👁️</span>
+      </div>
     </div>
 
     <div id="drop-area">
-      <p>Drag & Drop Excel File Here<br>or Click to Browse</p>
-      <input type="file" id="fileElem" accept=".xlsx, .xls"/>
+      <p>Drag & drop your Excel file here or <span class="browse-text">click to browse</span></p>
+      <input type="file" id="fileElem" accept=".xlsx,.xls">
     </div>
 
     <div id="preview-container">
-      <h2>Excel Preview</h2>
+      <h2>📊 Excel Preview</h2>
       <div id="tablePreview"></div>
     </div>
-
-    <script src="script.js"></script>
   </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
