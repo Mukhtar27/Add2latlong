@@ -111,3 +111,18 @@ th {
 #downloadLink:hover {
   background-color: #218838;
 }
+
+.reset-button {
+  margin-top: 20px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 15px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.reset-button:hover {
+  background-color: #d32f2f;
+}
+
