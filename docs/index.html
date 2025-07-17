@@ -3,21 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>📍 Address Geocoder</title>
+  <title>📍 Excel Address Geocoder</title>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div class="container">
-    <h1>📍 Address Geocoder</h1>
+    <h1>📍 Excel Address Geocoder</h1>
 
     <label for="apiKey"><span class="emoji">🔑</span> Enter your Google Maps API Key:</label>
     <div class="api-wrapper">
-      <input type="password" id="apiKey" placeholder="Enter API Key" autocomplete="off" />
-      <span class="toggle-visibility" onclick="toggleAPIVisibility()">👁️</span>
+      <input type="password" id="apiKey" placeholder="Enter API Key" />
+      <span class="toggle-visibility" id="toggleApi" onclick="toggleAPIVisibility()">👁️</span>
     </div>
 
-    <label for="fileInput">📤 Upload an Excel file:</label>
-    <input type="file" id="fileInput" accept=".xlsx" />
+    <label for="fileInput"><span class="emoji">📤</span> Upload an Excel file</label>
+    <div id="dropZone" class="drop-zone">
+      <p>📁 Drag and drop file here</p>
+      <p class="sub-text">Limit 200MB per file • .XLSX</p>
+      <input type="file" id="fileInput" accept=".xlsx" hidden />
+      <button id="browseBtn" type="button">Browse files</button>
+    </div>
 
     <div id="fileInfo"></div>
     <div id="previewContainer"></div>
