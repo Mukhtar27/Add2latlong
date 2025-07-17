@@ -1,120 +1,129 @@
-let workbook, sheetName, data;
+let selectedFile;
+const fileInput = document.getElementById('fileInput');
+const dropZone = document.getElementById('dropZone');
+const browseBtn = document.getElementById('browseBtn');
+const columnSelect = document.getElementById('columnSelect');
+const columnSelectContainer = document.getElementById('columnSelectContainer');
+const previewContainer = document.getElementById('previewContainer');
+const message = document.getElementById('message');
+const downloadLink = document.getElementById('downloadLink');
 
-document.getElementById('fileInput')?.addEventListener('change', handleFile);
-document.getElementById('processBtn').addEventListener('click', processAddresses);
-document.getElementById('reset-btn').addEventListener('click', () => location.reload());
+// Handle file browse
+browseBtn.addEventListener('click', () => fileInput.click());
 
-function toggleAPIVisibility() {
-  const apiInput = document.getElementById('apiKey');
-  apiInput.type = apiInput.type === 'password' ? 'text' : 'password';
-}
+// Handle drag and drop
+dropZone.addEventListener('dragover', e => {
+  e.preventDefault();
+  dropZone.classList.add('dragover');
+});
+dropZone.addEventListener('dragleave', () => {
+  dropZone.classList.remove('dragover');
+});
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change', () => {
+  if (fileInput.files.length > 0) {
+    handleFile(fileInput.files[0]);
+  }
+});
 
-// Drag-and-drop support
-const dropZone = document.querySelector(".drop-zone");
-if (dropZone) {
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.style.borderColor = "#007bff";
-  });
-
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.style.borderColor = "#ccc";
-  });
-
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.style.borderColor = "#ccc";
-    const file = e.dataTransfer.files[0];
-    if (file && file.name.endsWith(".xlsx")) {
-      document.getElementById("fileInput").files = e.dataTransfer.files;
-      handleFile({ target: { files: [file] } });
-    } else {
-      alert("Please upload a valid .xlsx file.");
-    }
-  });
-
-  // Trigger file browse on button click
-  document.getElementById("browseBtn")?.addEventListener("click", () => {
-    document.getElementById("fileInput").click();
-  });
-}
-
-function handleFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const dataBinary = new Uint8Array(e.target.result);
-    workbook = XLSX.read(dataBinary, { type: "array" });
-    sheetName = workbook.SheetNames[0];
-    data = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    if (data.length === 0) {
-      document.getElementById('message').textContent = "Excel file is empty.";
-      return;
-    }
-
-    const columns = Object.keys(data[0]);
-    const columnSelect = document.getElementById('columnSelect');
-    columnSelect.innerHTML = "";
-    columns.forEach(col => {
-      const option = document.createElement("option");
-      option.value = col;
-      option.textContent = col;
-      columnSelect.appendChild(option);
-    });
-
-    document.getElementById('columnSelectContainer').style.display = 'block';
-    document.getElementById('message').textContent = `Loaded ${data.length} rows.`;
-  };
-
-  reader.readAsArrayBuffer(file);
-}
-
-async function processAddresses() {
-  const apiKey = document.getElementById('apiKey').value;
-  const column = document.getElementById('columnSelect').value;
-
-  if (!apiKey || !data || !column) {
-    document.getElementById('message').textContent = "Missing required input.";
+function handleFile(file) {
+  if (!file.name.endsWith('.xlsx')) {
+    message.textContent = 'Please upload a valid .xlsx file.';
     return;
   }
 
-  document.getElementById('message').textContent = "Fetching coordinates...";
-  for (let i = 0; i < data.length; i++) {
-    const address = data[i][column];
-    if (!address) continue;
+  selectedFile = file;
+  document.getElementById('fileInfo').textContent = `📁 Selected: ${file.name}`;
 
-    try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`);
-      const json = await response.json();
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
 
-      if (json.status === "OK" && json.results[0]) {
-        const loc = json.results[0].geometry.location;
-        data[i]["Latitude"] = loc.lat;
-        data[i]["Longitude"] = loc.lng;
-      } else {
-        data[i]["Latitude"] = "";
-        data[i]["Longitude"] = "";
-      }
-    } catch (error) {
-      console.error("Error fetching geocode:", error);
-      data[i]["Latitude"] = "";
-      data[i]["Longitude"] = "";
+    if (json.length === 0) return;
+
+    // Show preview
+    previewContainer.innerHTML = '<h4>📄 Preview:</h4><pre>' + JSON.stringify(json.slice(0, 5), null, 2) + '</pre>';
+
+    // Populate column selector
+    const keys = Object.keys(json[0]);
+    columnSelect.innerHTML = '';
+    keys.forEach(key => {
+      const option = document.createElement('option');
+      option.value = key;
+      option.textContent = key;
+      columnSelect.appendChild(option);
+    });
+    columnSelectContainer.style.display = 'block';
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+document.getElementById('processBtn').addEventListener('click', async () => {
+  if (!selectedFile) return alert('Please upload an Excel file.');
+
+  const apiKey = document.getElementById('apiKey').value.trim();
+  if (!apiKey) return alert('Please enter your API key.');
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: 'array' });
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const json = XLSX.utils.sheet_to_json(sheet);
+
+    const column = columnSelect.value;
+    message.textContent = '⏳ Fetching coordinates...';
+
+    for (let row of json) {
+      const address = row[column];
+      const coords = await getCoordinates(address, apiKey);
+      row.Latitude = coords.lat;
+      row.Longitude = coords.lng;
     }
+
+    message.textContent = '✅ Done!';
+
+    const newSheet = XLSX.utils.json_to_sheet(json);
+    const newWorkbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(newWorkbook, newSheet, 'Geocoded');
+    const wbout = XLSX.write(newWorkbook, { bookType: 'xlsx', type: 'array' });
+
+    const blob = new Blob([wbout], { type: 'application/octet-stream' });
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'geocoded_addresses.xlsx';
+    downloadLink.style.display = 'inline-block';
+    downloadLink.textContent = '⬇ Download Geocoded Excel';
+  };
+  reader.readAsArrayBuffer(selectedFile);
+});
+
+async function getCoordinates(address, apiKey) {
+  const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
+  try {
+    const response = await fetch(url);
+    const data = await response.json();
+    if (data.status === 'OK') {
+      const loc = data.results[0].geometry.location;
+      return { lat: loc.lat, lng: loc.lng };
+    }
+  } catch (err) {
+    console.error('Error fetching geocode:', err);
   }
+  return { lat: '', lng: '' };
+}
 
-  const worksheet = XLSX.utils.json_to_sheet(data);
-  const newWorkbook = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(newWorkbook, worksheet, "Geocoded");
+document.getElementById('reset-btn').addEventListener('click', () => {
+  location.reload();
+});
 
-  const blob = XLSX.write(newWorkbook, { bookType: "xlsx", type: "blob" });
-  const url = URL.createObjectURL(blob);
-  const downloadLink = document.getElementById("downloadLink");
-  downloadLink.href = url;
-  downloadLink.download = "Geocoded_Addresses.xlsx";
-  downloadLink.style.display = "inline-block";
-  downloadLink.textContent = "⬇ Download Excel";
-  document.getElementById('message').textContent = "Geocoding complete.";
+function toggleAPIVisibility() {
+  const input = document.getElementById('apiKey');
+  input.type = input.type === 'password' ? 'text' : 'password';
 }
