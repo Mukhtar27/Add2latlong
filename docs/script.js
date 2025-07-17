@@ -150,3 +150,7 @@ function createDownload(data) {
   downloadLink.download = "geocoded_addresses.xlsx";
   downloadLink.style.display = "block";
 }
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+    location.reload();
+});
