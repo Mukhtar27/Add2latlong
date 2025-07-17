@@ -1,84 +1,108 @@
+/* Sleek, Neat, Beautiful UI */
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  background: #f1f3f7;
+  font-family: 'Segoe UI', sans-serif;
+  color: #333;
 }
 
 .container {
   max-width: 800px;
-  margin: auto;
-  background: #fff;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  margin: 40px auto;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.08);
 }
 
-h1, h2 {
+h1 {
   text-align: center;
-  color: #333;
+  color: #0a66c2;
+  font-size: 28px;
+  margin-bottom: 30px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.password-box {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.password-box input {
+  width: 100%;
+  padding: 10px 40px 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+#togglePassword {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
 }
 
 #drop-area {
   border: 2px dashed #aaa;
-  padding: 40px;
+  padding: 30px;
   text-align: center;
-  color: #777;
-  border-radius: 10px;
-  margin-top: 20px;
+  border-radius: 12px;
+  background: #fefefe;
+  cursor: pointer;
+  transition: 0.3s ease;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+#drop-area:hover {
+  background: #f0faff;
+  border-color: #0a66c2;
+  color: #0a66c2;
+}
+
+.browse-text {
+  font-weight: bold;
+  color: #0a66c2;
   cursor: pointer;
 }
 
-#drop-area.highlight {
-  background-color: #f0faff;
-  border-color: #00aaff;
-}
-
-#drop-area input {
-  display: none;
-}
-
 #tablePreview {
-  margin-top: 20px;
   overflow-x: auto;
+  margin-top: 20px;
 }
 
 table {
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
   background: white;
 }
 
 th, td {
+  padding: 12px;
   border: 1px solid #ddd;
-  padding: 8px;
   text-align: left;
 }
 
 th {
-  background-color: #007BFF;
+  background: #0a66c2;
   color: white;
 }
 
-.password-toggle {
-  position: relative;
-  width: 100%;
-  margin-top: 10px;
-}
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
 
-.password-toggle input {
-  width: 100%;
-  padding: 10px;
-  padding-right: 40px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
-
-.password-toggle span {
-  position: absolute;
-  top: 50%;
-  right: 12px;
-  transform: translateY(-50%);
-  cursor: pointer;
-  font-size: 18px;
+  th, td {
+    font-size: 14px;
+  }
 }
