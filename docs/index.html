@@ -7,28 +7,28 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <h1>📍 Excel Address Geocoder</h1>
+  <h1>📍 Excel Address Geocoder</h1>
 
-    <label for="apiKey">🔑 Enter Google Maps API Key:</label>
-    <input type="password" id="apiKey" placeholder="Enter API key..." />
+  <label for="apiKey">🔑 Enter Google Maps API Key:</label>
+  <input type="password" id="apiKey" placeholder="Your API Key" />
 
-    <label for="excelFile">📤 Upload Excel File:</label>
-    <input type="file" id="excelFile" accept=".xlsx, .xls" />
+  <br><br>
+  <label for="fileUpload">📤 Upload Excel File:</label>
+  <input type="file" id="fileUpload" accept=".xlsx" />
 
-    <div id="columnSelectWrapper" style="display:none;">
-      <label for="columnSelect">📌 Select Address Column:</label>
-      <select id="columnSelect"></select>
-    </div>
+  <br><br>
+  <label for="columnSelect">📌 Select Address Column:</label>
+  <select id="columnSelect"></select>
 
-    <button id="processBtn" disabled>🔍 Fetch Coordinates</button>
+  <br><br>
+  <button onclick="processFile()">🔍 Fetch Coordinates</button>
 
-    <div id="status"></div>
+  <br><br>
+  <div id="output"></div>
+  <br>
+  <a id="downloadLink" style="display:none;" download="geocoded_addresses.xlsx">⬇ Download Result Excel</a>
 
-    <a id="downloadLink" style="display:none;">⬇ Download Geocoded Excel</a>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
