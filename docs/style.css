@@ -1,92 +1,81 @@
+/* Base styles */
 body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f6f8fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f7f9;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  color: #333;
 }
 
 .container {
   max-width: 700px;
-  margin: auto;
-  background-color: white;
-  padding: 30px;
+  margin: 40px auto;
+  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 30px 40px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* Headings */
 h1 {
+  font-size: 1.8em;
+  color: #1a73e8;
+  margin-bottom: 20px;
   text-align: center;
-  color: #333;
-  font-size: 24px;
-  margin-bottom: 30px;
 }
 
+/* Labels */
 label {
+  font-weight: 600;
+  margin-top: 20px;
   display: block;
-  margin: 20px 0 8px;
-  font-weight: bold;
-  color: #333;
 }
 
-.emoji {
-  margin-right: 5px;
-}
-
+/* API key input */
 .api-wrapper {
   position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-#apiKey {
+.api-wrapper input {
   width: 100%;
-  padding: 10px 40px 10px 10px;
+  padding: 10px 38px 10px 12px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  font-size: 16px;
-  background-color: #f2f4f8;
-  transition: border-color 0.3s ease;
 }
 
 .toggle-visibility {
   position: absolute;
-  top: 50%;
   right: 12px;
-  transform: translateY(-50%);
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  font-size: 18px;
 }
 
-.api-wrapper:hover .toggle-visibility {
-  opacity: 1;
-}
-
+/* Drag and Drop zone */
 .drop-zone {
   border: 2px dashed #ccc;
-  background-color: #f2f4f8;
   border-radius: 10px;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
-  position: relative;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.drop-zone p {
-  margin: 0;
-  font-weight: 500;
-  color: #444;
+.drop-zone.dragover {
+  background-color: #e3f2fd;
+  border-color: #42a5f5;
 }
 
-.drop-zone .sub-text {
-  font-size: 12px;
-  color: #888;
-  margin-top: 6px;
-}
-
+/* Drop zone button */
 #browseBtn {
-  margin-top: 12px;
-  padding: 8px 18px;
-  font-size: 14px;
-  background-color: #0066cc;
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #1a73e8;
   color: white;
   border: none;
   border-radius: 6px;
@@ -94,17 +83,40 @@ label {
 }
 
 #browseBtn:hover {
-  background-color: #004a99;
+  background-color: #0f5bd3;
 }
 
+/* File info preview */
+#fileInfo,
+#previewContainer {
+  margin: 10px 0;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+/* Column select */
+#columnSelect {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  width: 100%;
+}
+
+/* Buttons */
 button {
+  padding: 10px 16px;
+  margin-right: 10px;
   margin-top: 20px;
-  padding: 10px 20px;
   font-size: 15px;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  margin-right: 10px;
 }
 
 #processBtn {
@@ -117,35 +129,36 @@ button {
 }
 
 .reset-button {
-  background-color: #ffc107;
-  color: #212529;
+  background-color: #dc3545;
+  color: white;
 }
 
 .reset-button:hover {
-  background-color: #e0a800;
+  background-color: #c82333;
 }
 
-#message {
-  margin-top: 15px;
-  font-weight: 500;
-  color: #333;
-}
-
-#resultContainer {
-  margin-top: 20px;
-}
-
-#downloadLink {
+a#downloadLink {
   display: inline-block;
-  margin-top: 15px;
-  font-size: 16px;
+  margin-top: 20px;
   text-decoration: none;
-  background-color: #007bff;
+  padding: 10px 16px;
+  background-color: #1a73e8;
   color: white;
-  padding: 10px 18px;
   border-radius: 6px;
 }
 
-#downloadLink:hover {
-  background-color: #0056b3;
+a#downloadLink:hover {
+  background-color: #0f5bd3;
+}
+
+/* Message and results */
+#message {
+  margin-top: 20px;
+  font-weight: 600;
+  color: #444;
+}
+
+#resultContainer {
+  margin-top: 10px;
+  font-size: 14px;
 }
