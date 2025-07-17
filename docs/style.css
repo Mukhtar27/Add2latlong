@@ -1,164 +1,115 @@
-/* Base styles */
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f4f7f9;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fc;
   margin: 0;
   padding: 0;
-  color: #333;
 }
 
 .container {
-  max-width: 700px;
-  margin: 40px auto;
-  background-color: #fff;
-  border-radius: 12px;
-  padding: 30px 40px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
-/* Headings */
 h1 {
-  font-size: 1.8em;
-  color: #1a73e8;
-  margin-bottom: 20px;
   text-align: center;
+  color: #333;
 }
 
-/* Labels */
 label {
-  font-weight: 600;
-  margin-top: 20px;
+  font-weight: bold;
   display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-/* API key input */
 .api-wrapper {
-  position: relative;
   display: flex;
   align-items: center;
-  margin-bottom: 20px;
+  position: relative;
 }
 
-.api-wrapper input {
-  width: 100%;
-  padding: 10px 38px 10px 12px;
-  font-size: 16px;
+.api-wrapper input[type="password"],
+.api-wrapper input[type="text"] {
+  flex-grow: 1;
+  padding: 0.6rem 2.5rem 0.6rem 0.6rem;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
+  background-color: #f1f3f8;
 }
 
 .toggle-visibility {
   position: absolute;
-  right: 12px;
+  right: 10px;
   cursor: pointer;
-  font-size: 18px;
 }
 
-/* Drag and Drop zone */
 .drop-zone {
-  border: 2px dashed #ccc;
-  border-radius: 10px;
-  padding: 20px;
+  background-color: #f1f3f8;
+  padding: 1rem;
+  border: 2px dashed #c0c0c0;
   text-align: center;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  background-color: #fafafa;
-  transition: border-color 0.3s ease, background-color 0.3s ease;
-}
-
-.drop-zone.dragover {
-  background-color: #e3f2fd;
-  border-color: #42a5f5;
-}
-
-/* Drop zone button */
-#browseBtn {
-  margin-top: 10px;
-  padding: 8px 16px;
-  background-color: #1a73e8;
-  color: white;
-  border: none;
   border-radius: 6px;
-  cursor: pointer;
+  margin-bottom: 1rem;
 }
 
-#browseBtn:hover {
-  background-color: #0f5bd3;
+.drop-zone.hover {
+  background-color: #e6e9f0;
+  border-color: #a0a0a0;
 }
 
-/* File info preview */
-#fileInfo,
-#previewContainer {
-  margin: 10px 0;
-  background-color: #f1f1f1;
-  padding: 10px;
-  border-radius: 6px;
-  font-family: monospace;
-  font-size: 14px;
-  white-space: pre-wrap;
+.drop-zone .sub-text {
+  color: #888;
+  font-size: 0.9rem;
 }
 
-/* Column select */
-#columnSelect {
-  margin-top: 10px;
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  width: 100%;
-}
-
-/* Buttons */
 button {
-  padding: 10px 16px;
-  margin-right: 10px;
-  margin-top: 20px;
-  font-size: 15px;
+  background-color: #007BFF;
+  color: #fff;
   border: none;
-  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-#processBtn {
-  background-color: #28a745;
-  color: white;
-}
-
-#processBtn:hover {
-  background-color: #218838;
+button:hover {
+  background-color: #0056b3;
 }
 
 .reset-button {
-  background-color: #dc3545;
-  color: white;
+  background-color: #f44336;
 }
 
 .reset-button:hover {
-  background-color: #c82333;
+  background-color: #c62828;
 }
 
-a#downloadLink {
-  display: inline-block;
-  margin-top: 20px;
-  text-decoration: none;
-  padding: 10px 16px;
-  background-color: #1a73e8;
-  color: white;
-  border-radius: 6px;
+#previewContainer {
+  margin-top: 1rem;
+  overflow-x: auto;
 }
 
-a#downloadLink:hover {
-  background-color: #0f5bd3;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-top: 0.5rem;
 }
 
-/* Message and results */
-#message {
-  margin-top: 20px;
-  font-weight: 600;
-  color: #444;
+table th, table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
 }
 
-#resultContainer {
-  margin-top: 10px;
-  font-size: 14px;
+table th {
+  background-color: #f1f3f8;
+  font-weight: bold;
 }
