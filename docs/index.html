@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Excel Address Geocoder</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body>
@@ -14,14 +14,19 @@
     <div class="input-group">
       <label for="apiKey">Google Maps API Key</label>
       <div class="password-box">
-        <input type="password" id="apiKey" placeholder="Enter API Key">
-        <span id="togglePassword">👁️</span>
+        <input type="password" id="apiKey" placeholder="Enter your API Key" />
+        <button id="togglePassword" class="eye-btn" aria-label="Toggle API Key visibility">
+          <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z" />
+            <circle cx="12" cy="12" r="3" />
+          </svg>
+        </button>
       </div>
     </div>
 
     <div id="drop-area">
       <p>Drag & drop your Excel file here or <span class="browse-text">click to browse</span></p>
-      <input type="file" id="fileElem" accept=".xlsx,.xls">
+      <input type="file" id="fileElem" accept=".xlsx,.xls" />
     </div>
 
     <div id="preview-container">
