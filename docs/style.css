@@ -1,165 +1,142 @@
-/* Base Styling */
 body {
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #f7f9fc;
+  font-family: 'Segoe UI', sans-serif;
   margin: 0;
-  padding: 2rem;
+  padding: 20px;
+  background: #f9f9f9;
   color: #333;
 }
 
 .container {
-  max-width: 900px;
+  max-width: 800px;
   margin: auto;
-  background: white;
-  padding: 2rem 3rem;
-  border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.06);
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
 
 h1 {
-  font-size: 2rem;
-  margin-bottom: 1rem;
   text-align: center;
-  color: #2a2a2a;
-}
-
-/* Input Groups */
-.input-group {
-  margin-bottom: 1.5rem;
+  color: #0c59cf;
 }
 
 .input-group label {
   display: block;
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+  margin-bottom: 6px;
+  font-weight: bold;
 }
 
-input[type="password"],
-input[type="text"],
-select {
+#apiKey {
   width: 100%;
-  padding: 0.6rem 0.8rem;
-  font-size: 1rem;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 8px;
   border: 1px solid #ccc;
-  border-radius: 10px;
-  outline: none;
-  transition: 0.3s ease;
+  margin-bottom: 20px;
+  box-sizing: border-box;
 }
 
-input:focus,
-select:focus {
-  border-color: #6c63ff;
-}
-
-/* Password Box */
 .password-box {
-  display: flex;
-  align-items: center;
   position: relative;
 }
 
-.password-box input {
-  flex: 1;
-  padding-right: 2.5rem;
-}
-
 .eye-btn {
-  background: transparent;
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
   border: none;
   cursor: pointer;
-  position: absolute;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 6px;
 }
 
-/* Drag & Drop Area */
 #drop-area {
-  border: 2px dashed #aaa;
-  border-radius: 15px;
-  padding: 2rem;
+  border: 2px dashed #ccc;
+  padding: 30px;
   text-align: center;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+#drop-area:hover {
+  background: #f0f8ff;
+}
+
+#fileElem {
+  display: block;
+  margin: 10px auto;
+}
+
+.browse-text {
+  color: #0c59cf;
   cursor: pointer;
-  background: #fafafa;
-  transition: background 0.3s;
+  font-weight: bold;
 }
 
-#drop-area.highlight {
-  background: #e9f1ff;
-  border-color: #6c63ff;
+#addressColumnContainer {
+  margin-bottom: 20px;
 }
 
-#drop-area .browse-text {
-  color: #6c63ff;
-  font-weight: 600;
-  cursor: pointer;
+#addressColumnContainer label {
+  font-weight: bold;
 }
 
-/* Table Preview */
-#preview-container {
-  margin-top: 2rem;
+#addressSelect {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 8px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
 }
 
 #preview-container h2 {
-  font-size: 1.4rem;
-  margin-bottom: 0.8rem;
+  font-size: 1.4em;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-table {
+#tablePreview table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 1rem;
-  font-size: 0.95rem;
+  margin-bottom: 20px;
 }
 
-table thead {
-  background-color: #f1f3f7;
-}
-
-table th, table td {
-  padding: 10px;
+#tablePreview th,
+#tablePreview td {
   border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
 }
 
-/* Buttons */
-.action-btn {
-  margin-top: 1rem;
-  margin-right: 1rem;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  background-color: #6c63ff;
+#tablePreview th {
+  background: #0c59cf;
+  color: white;
+}
+
+.button-bar {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.button-bar button {
+  padding: 10px 16px;
+  font-size: 15px;
+  background: #0c59cf;
   color: white;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: background 0.2s ease-in-out;
 }
 
-.action-btn:hover {
-  background-color: #584ef1;
+.button-bar button:hover {
+  background: #094db6;
 }
 
-.reset {
-  background-color: #e74c3c;
-}
-
-.reset:hover {
-  background-color: #c0392b;
-}
-
-/* Responsive */
-@media (max-width: 600px) {
-  .container {
-    padding: 1rem;
-  }
-
-  .action-btn {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
+.hidden {
+  display: none;
 }
