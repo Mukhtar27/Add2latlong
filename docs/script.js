@@ -1,141 +1,152 @@
-// ===== Password Toggle (Custom SVG) =====
-const apiKeyInput = document.getElementById('apiKey');
-const togglePassword = document.getElementById('togglePassword');
-const eyeIcon = document.getElementById('eyeIcon');
+import * as XLSX from 'https://cdn.sheetjs.com/xlsx-0.20.0/package/xlsx.mjs';
 
-togglePassword.addEventListener('click', () => {
-  const type = apiKeyInput.type === 'password' ? 'text' : 'password';
-  apiKeyInput.type = type;
+let workbook, selectedSheet, jsonData = [];
+let apiKeyVisible = false;
 
-  eyeIcon.innerHTML = type === 'password'
-    ? `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8S1 12 1 12z"/><circle cx="12" cy="12" r="3"/>`
-    : `<path d="M17.94 17.94A10.94 10.94 0 0112 20c-7 0-11-8-11-8a21.91 21.91 0 014.14-5.94"/><path d="M1 1l22 22"/>`;
+const apiKeyInput = document.getElementById("apiKey");
+const eyeBtn = document.getElementById("toggleApiKey");
+eyeBtn.innerHTML = "🔓";
+
+eyeBtn.addEventListener("click", () => {
+  apiKeyVisible = !apiKeyVisible;
+  apiKeyInput.type = apiKeyVisible ? "text" : "password";
+  eyeBtn.innerHTML = apiKeyVisible ? "🔒" : "🔓";
 });
 
-// ===== Excel Upload + Preview =====
-const dropArea = document.getElementById('drop-area');
-const fileElem = document.getElementById('fileElem');
-const tablePreview = document.getElementById('tablePreview');
-let workbookData = null;
+const dropArea = document.getElementById("drop-area");
+const fileInput = document.getElementById("fileElem");
+const tablePreview = document.getElementById("tablePreview");
+const addressSelect = document.getElementById("addressSelect");
+const addressColumnContainer = document.getElementById("addressColumnContainer");
+const geocodeBtn = document.getElementById("geocodeBtn");
+const resetBtn = document.getElementById("resetBtn");
+const downloadBtn = document.getElementById("downloadBtn");
+const actionButtons = document.getElementById("action-buttons");
 
-dropArea.addEventListener('click', () => fileElem.click());
-
-dropArea.addEventListener('dragover', e => {
-  e.preventDefault();
-  dropArea.classList.add('highlight');
+["dragenter", "dragover", "dragleave", "drop"].forEach(event => {
+  dropArea.addEventListener(event, e => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, false);
 });
 
-dropArea.addEventListener('dragleave', () => {
-  dropArea.classList.remove('highlight');
-});
+dropArea.addEventListener("drop", handleDrop, false);
+fileInput.addEventListener("change", handleFile, false);
+geocodeBtn.addEventListener("click", geocodeAddresses);
+resetBtn.addEventListener("click", resetApp);
+downloadBtn.addEventListener("click", downloadExcel);
 
-dropArea.addEventListener('drop', e => {
-  e.preventDefault();
-  dropArea.classList.remove('highlight');
-  const file = e.dataTransfer.files[0];
-  handleFile(file);
-});
+function handleDrop(e) {
+  const files = e.dataTransfer.files;
+  if (files.length > 0) readExcel(files[0]);
+}
 
-fileElem.addEventListener('change', () => {
-  const file = fileElem.files[0];
-  handleFile(file);
-});
+function handleFile(e) {
+  const file = e.target.files[0];
+  if (file) readExcel(file);
+}
 
-function handleFile(file) {
+function readExcel(file) {
   const reader = new FileReader();
-  reader.onload = (e) => {
+  reader.onload = function (e) {
     const data = new Uint8Array(e.target.result);
-    const workbook = XLSX.read(data, { type: 'array' });
+    workbook = XLSX.read(data, { type: 'array' });
     const sheetName = workbook.SheetNames[0];
-    const sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { defval: '' });
-    workbookData = sheet;
-    showTable(sheet);
-    createAddressSelector(sheet);
+    selectedSheet = workbook.Sheets[sheetName];
+    jsonData = XLSX.utils.sheet_to_json(selectedSheet);
+    populateColumnSelector(Object.keys(jsonData[0]));
+    previewTable(jsonData);
+    addressColumnContainer.classList.remove("hidden");
+    actionButtons.classList.remove("hidden");
+    downloadBtn.classList.add("hidden"); // Hide initially
   };
   reader.readAsArrayBuffer(file);
 }
 
-// ===== Show Table Preview =====
-function showTable(data) {
-  if (!data.length) return;
-  const headers = Object.keys(data[0]);
-  let html = '<table><thead><tr>';
-  headers.forEach(h => html += `<th>${h}</th>`);
-  html += '</tr></thead><tbody>';
+function populateColumnSelector(columns) {
+  addressSelect.innerHTML = "";
+  columns.forEach(col => {
+    const option = document.createElement("option");
+    option.value = col;
+    option.textContent = col;
+    addressSelect.appendChild(option);
+  });
+}
+
+function previewTable(data) {
+  tablePreview.innerHTML = "";
+  const table = document.createElement("table");
+  const thead = document.createElement("thead");
+  const headerRow = document.createElement("tr");
+
+  Object.keys(data[0]).forEach(key => {
+    const th = document.createElement("th");
+    th.textContent = key;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
   data.forEach(row => {
-    html += '<tr>';
-    headers.forEach(h => html += `<td>${row[h]}</td>`);
-    html += '</tr>';
+    const tr = document.createElement("tr");
+    Object.values(row).forEach(val => {
+      const td = document.createElement("td");
+      td.textContent = val;
+      tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
   });
-  html += '</tbody></table>';
-  tablePreview.innerHTML = html;
+
+  table.appendChild(tbody);
+  tablePreview.appendChild(table);
 }
 
-// ===== Address Column Selector =====
-function createAddressSelector(data) {
-  const headers = Object.keys(data[0]);
-  let selectorHTML = `<div class="input-group"><label>Select Address Column</label><select id="addressColumn">`;
-  headers.forEach(col => {
-    selectorHTML += `<option value="${col}">${col}</option>`;
-  });
-  selectorHTML += `</select></div>`;
-
-  if (!document.getElementById('addressColumn')) {
-    dropArea.insertAdjacentHTML('afterend', selectorHTML);
-    const goButton = `<button id="geocodeBtn" class="action-btn">Geocode</button>
-                      <button id="downloadBtn" class="action-btn">Download .xlsx</button>
-                      <button id="resetBtn" class="action-btn reset">Reset</button>`;
-    tablePreview.insertAdjacentHTML('afterend', goButton);
-
-    document.getElementById('geocodeBtn').addEventListener('click', geocodeAddresses);
-    document.getElementById('downloadBtn').addEventListener('click', downloadExcel);
-    document.getElementById('resetBtn').addEventListener('click', resetApp);
-  }
-}
-
-// ===== Geocode Addresses =====
 async function geocodeAddresses() {
   const apiKey = apiKeyInput.value.trim();
-  if (!apiKey) return alert("Please enter your API key.");
+  const addressCol = addressSelect.value;
 
-  const col = document.getElementById('addressColumn').value;
-  for (let i = 0; i < workbookData.length; i++) {
-    const address = workbookData[i][col];
-    try {
-      const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`);
-      const result = await response.json();
-      if (result.status === "OK") {
-        const location = result.results[0].geometry.location;
-        workbookData[i]["Latitude"] = location.lat;
-        workbookData[i]["Longitude"] = location.lng;
-      } else {
-        workbookData[i]["Latitude"] = "";
-        workbookData[i]["Longitude"] = "";
-      }
-    } catch (err) {
-      workbookData[i]["Latitude"] = "";
-      workbookData[i]["Longitude"] = "";
+  if (!apiKey || !addressCol) {
+    alert("Please provide API Key and select Address column.");
+    return;
+  }
+
+  for (let row of jsonData) {
+    const address = row[addressCol];
+    if (!address) continue;
+
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`);
+    const result = await response.json();
+
+    if (result.status === "OK" && result.results.length > 0) {
+      const location = result.results[0].geometry.location;
+      row["Latitude"] = location.lat;
+      row["Longitude"] = location.lng;
+    } else {
+      row["Latitude"] = "N/A";
+      row["Longitude"] = "N/A";
     }
   }
-  showTable(workbookData);
+
+  previewTable(jsonData);
+  downloadBtn.classList.remove("hidden"); // Show after geocoding
 }
 
-// ===== Download Updated Excel =====
 function downloadExcel() {
-  const ws = XLSX.utils.json_to_sheet(workbookData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "Geocoded Data");
-  XLSX.writeFile(wb, "geocoded_output.xlsx");
+  const newSheet = XLSX.utils.json_to_sheet(jsonData);
+  const newWb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(newWb, newSheet, "Geocoded");
+  XLSX.writeFile(newWb, "geocoded_results.xlsx");
 }
 
-// ===== Reset Everything =====
 function resetApp() {
-  apiKeyInput.value = "";
-  fileElem.value = "";
-  workbookData = null;
+  workbook = null;
+  selectedSheet = null;
+  jsonData = [];
   tablePreview.innerHTML = "";
-  const addressSelect = document.getElementById('addressColumn');
-  if (addressSelect) addressSelect.parentElement.remove();
-  const buttons = document.querySelectorAll('.action-btn');
-  buttons.forEach(btn => btn.remove());
+  addressSelect.innerHTML = "";
+  fileInput.value = "";
+  addressColumnContainer.classList.add("hidden");
+  actionButtons.classList.add("hidden");
 }
