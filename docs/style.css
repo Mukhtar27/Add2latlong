@@ -82,3 +82,35 @@ a#downloadLink {
   text-align: center;
   font-size: 16px;
 }
+
+/* ✅ Remove browser's native password eye icon (Chrome, Edge, Safari) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-inner-spin-button,
+input[type="password"]::-webkit-clear-button {
+  display: none !important;
+  appearance: none !important;
+}
+
+/* ✅ Keep your custom eye toggle button aligned */
+.api-wrapper {
+  position: relative;
+}
+
+.api-wrapper input[type="password"],
+.api-wrapper input[type="text"] {
+  width: 100%;
+  padding-right: 30px; /* Space for eye icon */
+}
+
+.toggle-visibility {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  user-select: none;
+  font-size: 18px;
+}
+
